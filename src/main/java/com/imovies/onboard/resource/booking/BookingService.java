@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -105,6 +106,10 @@ public class BookingService {
     public BookingDTO getById(Integer id) {
         Booking original = requireOne(id);
         return toDTO(original);
+    }
+
+    public Set<Booking> getByUserId(String userId) {
+        return bookingRepository.findAllByUserId(userId);
     }
 
     public Page<Booking> query(Integer pageNo, Integer pageSize, String sortBy) {

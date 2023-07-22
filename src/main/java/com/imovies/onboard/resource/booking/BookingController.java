@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 
 @Validated
 @RestController
@@ -60,10 +62,16 @@ public class BookingController {
         return bookingService.getById(id);
     }
 
+    @GetMapping("/user/{id}")
+    public Set<Booking> getByUserId(@Valid @NotNull @PathVariable("id") String userId) {
+        return bookingService.getByUserId(userId);
+    }
+
     @GetMapping
     public Page<Booking> query(@RequestParam(defaultValue = "0") Integer pageNo,
                                @RequestParam(defaultValue = "10") Integer pageSize,
                                @RequestParam(defaultValue = "name") String sortBy) {
         return bookingService.query(pageNo, pageSize, sortBy);
     }
+
 }
