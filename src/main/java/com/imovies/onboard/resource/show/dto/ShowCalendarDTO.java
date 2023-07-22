@@ -26,4 +26,6 @@ public class ShowCalendarDTO implements Serializable {
 //    private LocalDateTime updatedTs;
 
     private Set<ShowCalendarPriceDTO> showCalendarPrices;
+
+    private Set<Integer> reservedSeats;
 }

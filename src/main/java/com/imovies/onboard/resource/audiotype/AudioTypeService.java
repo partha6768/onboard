@@ -43,7 +43,6 @@ public class AudioTypeService {
     }
 
     public Page<AudioType> query(Integer pageNo, Integer pageSize, String sortBy) {
-
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         return audioTypeRepository.findAll(pageable);
     }

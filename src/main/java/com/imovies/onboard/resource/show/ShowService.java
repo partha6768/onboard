@@ -3,9 +3,8 @@ package com.imovies.onboard.resource.show;
 import com.imovies.onboard.resource.show.dto.ShowCalendarDTO;
 import com.imovies.onboard.resource.show.dto.ShowCalendarPriceDTO;
 import com.imovies.onboard.resource.show.dto.ShowDTO;
-import com.imovies.onboard.resource.show.entity.Show;
-import com.imovies.onboard.resource.show.entity.ShowCalendar;
-import com.imovies.onboard.resource.show.entity.ShowCalendarPrice;
+import com.imovies.onboard.resource.show.entity.*;
+import com.imovies.onboard.resource.show.repository.ShowCalendarSeatBookingRepository;
 import com.imovies.onboard.resource.show.repository.ShowRepository;
 import com.imovies.onboard.resource.show.vo.ShowUpdateVO;
 import com.imovies.onboard.resource.show.vo.ShowVO;
@@ -16,17 +15,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ShowService {
 
     private final ShowRepository showRepository;
 
-    public ShowService(ShowRepository showRepository) {
+    private final ShowCalendarSeatBookingRepository showCalendarSeatBookingRepository;
+
+    public ShowService(ShowRepository showRepository, ShowCalendarSeatBookingRepository showCalendarSeatBookingRepository) {
         this.showRepository = showRepository;
+        this.showCalendarSeatBookingRepository = showCalendarSeatBookingRepository;
     }
 
     public Integer save(ShowVO show) {
@@ -75,8 +76,23 @@ public class ShowService {
     }
 
     public ShowDTO getById(Integer id) {
-        Show original = requireOne(id);
-        return toDTO(original);
+        Show showEntity = requireOne(id);
+        //Get Booked seats
+        Set<Integer> showCalendarIds = showEntity.getShowCalendars()
+                .stream()
+                .map(x -> x.getId())
+                .collect(Collectors.toSet());
+        Set<ShowCalendarSeatBooking> reservedSeats = showCalendarSeatBookingRepository.getReservedSeatIdsByShowCalendarByShowCalendarIds(showCalendarIds);
+        Map<Integer, Set<Integer>> showCalendarSeatMapping = new HashMap<>();
+        reservedSeats.stream().forEach( x -> {
+            Set<Integer> seats = showCalendarSeatMapping.get(x.getShowCalendarId());
+            if( seats == null) {
+                seats = new HashSet<>();
+                showCalendarSeatMapping.put(x.getShowCalendarId(), seats);
+            }
+            seats.add(x.getSeatId());
+        });
+        return toDTO(showEntity, showCalendarSeatMapping);
     }
 
     public Page<Show> query(Integer pageNo, Integer pageSize, String sortBy) {
@@ -84,7 +100,7 @@ public class ShowService {
         return showRepository.findAll(pageable);
     }
 
-    private ShowDTO toDTO(Show showEntity) {
+    private ShowDTO toDTO(Show showEntity, Map<Integer, Set<Integer>> showCalendarSeatMapping ) {
         ShowDTO showDTO = new ShowDTO();
         Set<ShowCalendarDTO> showCalendarDTOS = new HashSet<>();
         showEntity.getShowCalendars()
@@ -101,6 +117,7 @@ public class ShowService {
                                 showCalendarPriceDTOS.add(showCalendarPriceDTO);
                             });
                     showCalendarDTO.setShowCalendarPrices(showCalendarPriceDTOS);
+                    showCalendarDTO.setReservedSeats(showCalendarSeatMapping.get(showCalendarDTO.getId()));
                     showCalendarDTOS.add(showCalendarDTO);
                 });
         BeanUtils.copyProperties(showEntity, showDTO);
