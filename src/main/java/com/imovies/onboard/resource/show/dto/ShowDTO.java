@@ -3,6 +3,7 @@ package com.imovies.onboard.resource.show.dto;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,6 +20,10 @@ public class ShowDTO implements Serializable {
     private String genre;
 
     private String languageName;
+
+    private String thumbnailUrl;
+
+    private String trailerUrl;
 
     private String viewTypeName;
 

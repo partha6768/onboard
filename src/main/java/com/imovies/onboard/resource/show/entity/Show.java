@@ -35,6 +35,12 @@ public class Show implements Serializable {
     @Column(name = "LANGUAGE_NAME", nullable = false)
     private String languageName;
 
+    @Column(name = "THUMBNAIL_URL", nullable = false)
+    private String thumbnailUrl;
+
+    @Column(name = "TRAILER_URL", nullable = false)
+    private String trailerUrl;
+
     @Column(name = "VIEW_TYPE_NAME", nullable = false)
     private String viewTypeName;
 

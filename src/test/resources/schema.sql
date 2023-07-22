@@ -259,6 +259,8 @@ CREATE TABLE `SHOW`(
                        MOVIE_TITLE VARCHAR(255) NOT NULL,
                        GENERE VARCHAR(31) NOT NULL,
                        LANGUAGE_NAME VARCHAR(15) NOT NULL,
+                       THUMBNAIL_URL VARCHAR(2048) NOT NULL,
+                       TRAILER_URL VARCHAR(2048) NOT NULL,
                        VIEW_TYPE_NAME VARCHAR(7) NOT NULL,
                        DURATION  VARCHAR(7) NOT NULL,
                        SCREEN_NAME VARCHAR(15) NOT NULL,
@@ -276,14 +278,21 @@ CREATE TABLE `SHOW`(
                        FOREIGN KEY (VIEW_TYPE_NAME) REFERENCES VIEW_TYPE(NAME)
 );
 
-INSERT INTO `SHOW`(MOVIE_ID, MOVIE_TITLE, GENERE, LANGUAGE_NAME, VIEW_TYPE_NAME, DURATION, SCREEN_NAME,
+
+INSERT INTO `SHOW`(MOVIE_ID, MOVIE_TITLE, GENERE, LANGUAGE_NAME,THUMBNAIL_URL, TRAILER_URL, VIEW_TYPE_NAME, DURATION, SCREEN_NAME,
                    THEATER_ID, THEATER_DISPLAY_NAME, CITY_ID, START_TS, END_TS, CREATED_TS ) VALUES
-    (1,'Mission: Impossible – Dead Reckoning Part 1', 'Action', 'English', '3D' ,'2h 43m', 'Screen 1',
+    (1,'Mission: Impossible – Dead Reckoning Part 1', 'Action', 'English',
+     'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRPunAXQI8_X7p1MYVmiRF-hSOinkCiCqca8p9_0vB22qS2ttjx',
+     'https://www.youtube.com/watch?v=avz06PDqDbM',
+     '3D' ,'2h 43m', 'Screen 1',
      1, 'INOX-DN Regalia', 1, CURRENT_TIMESTAMP(), DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 20 DAY),  CURRENT_TIMESTAMP());
 
-INSERT INTO `SHOW`(MOVIE_ID, MOVIE_TITLE, GENERE, LANGUAGE_NAME, VIEW_TYPE_NAME, DURATION, SCREEN_NAME,
+INSERT INTO `SHOW`(MOVIE_ID, MOVIE_TITLE, GENERE, LANGUAGE_NAME,THUMBNAIL_URL, TRAILER_URL, VIEW_TYPE_NAME, DURATION, SCREEN_NAME,
                    THEATER_ID, THEATER_DISPLAY_NAME, CITY_ID, START_TS, END_TS, CREATED_TS ) VALUES
-    (1,'Mission: Impossible – Dead Reckoning Part 1', 'Action', 'Hindi', '2D' ,'2h 43m', 'Screen 2',
+    (1,'Mission: Impossible – Dead Reckoning Part 1', 'Action', 'Hindi',
+     'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRPunAXQI8_X7p1MYVmiRF-hSOinkCiCqca8p9_0vB22qS2ttjx',
+     'https://www.youtube.com/watch?v=avz06PDqDbM',
+     '2D' ,'2h 43m', 'Screen 2',
      1, 'INOX-DN Regalia', 1, CURRENT_TIMESTAMP(), DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 20 DAY),  CURRENT_TIMESTAMP());
 
 
@@ -376,6 +385,8 @@ CREATE TABLE BOOKING(
                         FOREIGN KEY (SHOW_CALENDAR_ID,SCREEN_SEAT_TYPE_ID) REFERENCES SHOW_CALENDAR_PRICE(SHOW_CALENDAR_ID, SCREEN_SEAT_TYPE_ID),
                         FOREIGN KEY (`STATUS`) REFERENCES BOOKING_STATUS(NAME)
 );
+
+-- ALTER TABLE BOOKING MODIFY PAYMENT_TRANSACTION_ID VARCHAR(255);
 
 -- DROP TABLE SEAT_STATUS;
 CREATE TABLE SEAT_STATUS(NAME VARCHAR(15) NOT NULL PRIMARY KEY,created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP());

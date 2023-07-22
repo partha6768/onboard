@@ -2,6 +2,7 @@ package com.imovies.onboard.resource.show.vo;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -24,6 +25,12 @@ public class ShowVO implements Serializable {
 
     @NotNull(message = "languageName can not null")
     private String languageName;
+
+    @NotNull(message = "thumbnailUrl can not null")
+    private String thumbnailUrl;
+
+    @NotNull(message = "trailerUrl can not null")
+    private String trailerUrl;
 
     @NotNull(message = "viewTypeName can not null")
     private String viewTypeName;
