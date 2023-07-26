@@ -4,6 +4,9 @@ import com.imovies.onboard.resource.movie.entity.Movie;
 import com.imovies.onboard.resource.movie.entity.MovieViewType;
 import com.imovies.onboard.resource.city.CityRepository;
 import com.imovies.onboard.resource.movie.repository.MovieRepository;
+import com.imovies.onboard.resource.movie.vo.MovieVO;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +17,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @SpringBootTest
 class OnboardApplicationTests {
@@ -30,8 +34,30 @@ class OnboardApplicationTests {
 
 	@Autowired
 	MovieRepository movieRepository;
+
 	//@Test
-	@Transactional
+	public void givenMovieVo_validateGenre_shouldNotBeEmpty() {
+
+		//Given
+		MovieVO movieVO = new MovieVO();
+		Predicate<MovieVO> filterGen = x -> StringUtils.isNotEmpty(x.getGenere());
+		Predicate<MovieVO> filterTitle = x -> StringUtils.isNotEmpty(x.getTitle());
+
+		//filterGen.and()
+
+		//Then
+		boolean isGenre = filterGen.test(movieVO);
+
+		//Assert
+		Assert.assertTrue(isGenre);
+
+	}
+
+
+	//@Test
+
+
+	//@Transactional
 	public void test() throws InterruptedException {
 		Movie movie = new Movie();
 		movie.setTitle("Movie1");
